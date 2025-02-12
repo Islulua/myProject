@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>C&plus;&plus;&#x5355;&#x4f8b;&#x6a21;&#x5f0f;&#x5b9e;&#x73b0;&#x7b14;&#x8bb0;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="c单例模式实现笔记">C++单例模式实现笔记</h1>
+<h2 id="概述">概述</h2>
+<p>单例模式确保一个类只有一个实例，并提供一个全局访问点。本文介绍了四种C++实现单例模式的方法，每种方法都有其特定的使用场景。</p>
+<h2 id="实现方式">实现方式</h2>
+<h3 id="1-meyers-singleton-basicsingleton">1. Meyer's Singleton (BasicSingleton)</h3>
+<p>最简单且线程安全的实现方式。</p>
+<pre><code class="language-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">BasicSingleton</span> {
+    <span class="hljs-function"><span class="hljs-type">static</span> BasicSingleton&amp; <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-type">static</span> BasicSingleton instance;
+        <span class="hljs-keyword">return</span> instance;
+    }
+};
+</code></pre>
+<p><strong>特点：</strong></p>
+<ul>
+<li>优点：
+<ul>
+<li>自动线程安全（C++11保证）</li>
+<li>懒加载</li>
+<li>实现简单</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>无法控制构造时机</li>
+</ul>
+</li>
+<li>使用场景：
+<ul>
+<li>一般场景</li>
+<li>不需要特殊控制的情况</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-double-checked-locking-pattern-dclsingleton">2. Double-Checked Locking Pattern (DCLSingleton)</h3>
+<p>用于需要精确控制实例化时机的场景。</p>
+<pre><code class="language-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">DCLSingleton</span> {
+    <span class="hljs-type">static</span> std::atomic&lt;DCLSingleton*&gt; instance;
+    <span class="hljs-type">static</span> std::mutex mutex;
+    
+    <span class="hljs-function"><span class="hljs-type">static</span> DCLSingleton* <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>{
+        DCLSingleton* tmp = instance.<span class="hljs-built_in">load</span>(std::memory_order_acquire);
+        <span class="hljs-keyword">if</span> (!tmp) {
+            <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mutex)</span></span>;
+            tmp = instance.<span class="hljs-built_in">load</span>(std::memory_order_relaxed);
+            <span class="hljs-keyword">if</span> (!tmp) {
+                tmp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">DCLSingleton</span>();
+                instance.<span class="hljs-built_in">store</span>(tmp, std::memory_order_release);
+            }
+        }
+        <span class="hljs-keyword">return</span> tmp;
+    }
+};
+</code></pre>
+<p><strong>特点：</strong></p>
+<ul>
+<li>优点：
+<ul>
+<li>可控制构造时机</li>
+<li>高性能（避免每次获取实例都加锁）</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>实现复杂</li>
+<li>需要谨慎处理内存序</li>
+</ul>
+</li>
+<li>使用场景：
+<ul>
+<li>性能关键场景</li>
+<li>需要延迟初始化</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-call-once-pattern-calloncesingleton">3. Call-Once Pattern (CallOnceSingleton)</h3>
+<p>使用std::call_once确保初始化只执行一次。</p>
+<pre><code class="language-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">CallOnceSingleton</span> {
+    <span class="hljs-type">static</span> std::unique_ptr&lt;CallOnceSingleton&gt; instance;
+    <span class="hljs-type">static</span> std::once_flag flag;
+    
+    <span class="hljs-function"><span class="hljs-type">static</span> CallOnceSingleton&amp; <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>{
+        std::<span class="hljs-built_in">call_once</span>(flag, []() {
+            instance.<span class="hljs-built_in">reset</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">CallOnceSingleton</span>());
+        });
+        <span class="hljs-keyword">return</span> *instance;
+    }
+};
+</code></pre>
+<p><strong>特点：</strong></p>
+<ul>
+<li>优点：
+<ul>
+<li>保证初始化只执行一次</li>
+<li>线程安全</li>
+<li>自动内存管理</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>可能比DCL稍慢</li>
+</ul>
+</li>
+<li>使用场景：
+<ul>
+<li>需要确保初始化只执行一次</li>
+<li>关注资源安全管理</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-atomic-singleton-atomicsingleton">4. Atomic Singleton (AtomicSingleton)</h3>
+<p>使用原子操作控制内存序。</p>
+<pre><code class="language-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">AtomicSingleton</span> {
+    <span class="hljs-function"><span class="hljs-type">static</span> AtomicSingleton&amp; <span class="hljs-title">getInstance</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-type">static</span> AtomicSingleton instance;
+        std::<span class="hljs-built_in">atomic_thread_fence</span>(std::memory_order_acquire);
+        <span class="hljs-keyword">return</span> instance;
+    }
+};
+</code></pre>
+<p><strong>特点：</strong></p>
+<ul>
+<li>优点：
+<ul>
+<li>可以精确控制内存序</li>
+<li>线程安全</li>
+</ul>
+</li>
+<li>缺点：
+<ul>
+<li>实现相对复杂</li>
+</ul>
+</li>
+<li>使用场景：
+<ul>
+<li>需要细粒度内存序控制</li>
+</ul>
+</li>
+</ul>
+<h2 id="通用注意事项">通用注意事项</h2>
+<ol>
+<li><strong>构造函数和析构函数</strong></li>
+</ol>
+<pre><code class="language-cpp"><span class="hljs-keyword">private</span>:
+    <span class="hljs-built_in">ClassName</span>() <span class="hljs-keyword">noexcept</span> = <span class="hljs-keyword">default</span>;
+    ~<span class="hljs-built_in">ClassName</span>() <span class="hljs-keyword">noexcept</span> = <span class="hljs-keyword">default</span>;
+</code></pre>
+<ul>
+<li>声明为private防止外部创建实例</li>
+<li>使用noexcept提高性能</li>
+<li>使用=default让编译器生成默认实现</li>
+</ul>
+<ol start="2">
+<li><strong>禁用拷贝和赋值</strong></li>
+</ol>
+<pre><code class="language-cpp">    <span class="hljs-built_in">ClassName</span>(<span class="hljs-type">const</span> ClassName&amp;) = <span class="hljs-keyword">delete</span>;
+    ClassName&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> ClassName&amp;) = <span class="hljs-keyword">delete</span>;
+</code></pre>
+<ol start="3">
+<li><strong>内存序考虑</strong></li>
+</ol>
+<ul>
+<li>acquire: 读取操作，确保后续读写不会重排到此操作之前</li>
+<li>release: 写入操作，确保之前的读写不会重排到此操作之后</li>
+<li>relaxed: 最宽松的内存序，只保证原子性</li>
+</ul>
+<h2 id="选择建议">选择建议</h2>
+<ol>
+<li>一般场景：使用Meyer's Singleton</li>
+<li>性能关键：使用Double-Checked Locking Pattern</li>
+<li>资源安全：使用Call-Once Pattern</li>
+<li>内存序控制：使用Atomic Singleton</li>
+</ol>
+<h2 id="最佳实践">最佳实践</h2>
+<ol>
+<li>优先使用Meyer's Singleton，除非有特殊需求</li>
+<li>需要控制构造时机时，考虑DCL模式</li>
+<li>关注资源安全时，使用Call-Once模式</li>
+<li>需要细粒度内存控制时，使用Atomic模式</li>
+</ol>
+
+            
+            
+        </body>
+        </html>

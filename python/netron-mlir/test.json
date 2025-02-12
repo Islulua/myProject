@@ -1,0 +1,117 @@
+{
+  "signature": "netron:onnx",
+  "format": "ONNX",
+  "graphs": [
+    {
+      "nodes": [
+        {
+          "type": {
+            "name": "arith.addi",
+            "category": "Layer"
+          },
+          "name": "arith.addi",
+          "inputs": [
+            {
+              "name": "arith.addi_input_0",
+              "value": [
+                0
+              ]
+            },
+            {
+              "name": "arith.addi_input_1",
+              "value": [
+                1
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "arith.addi_output_0",
+              "value": [
+                2
+              ]
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "type": {
+            "name": "arith.muli",
+            "category": "Layer"
+          },
+          "name": "arith.muli",
+          "inputs": [
+            {
+              "name": "arith.muli_input_0",
+              "value": [
+                2
+              ]
+            },
+            {
+              "name": "arith.muli_input_1",
+              "value": [
+                0
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "arith.muli_output_0",
+              "value": [
+                3
+              ]
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "type": {
+            "name": "arith.addi",
+            "category": "Layer"
+          },
+          "name": "arith.addi",
+          "inputs": [
+            {
+              "name": "arith.addi_input_0",
+              "value": [
+                3
+              ]
+            },
+            {
+              "name": "arith.addi_input_1",
+              "value": [
+                1
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "arith.addi_output_0",
+              "value": [
+                4
+              ]
+            }
+          ],
+          "attributes": []
+        },
+        {
+          "type": {
+            "name": "func.return",
+            "category": "Layer"
+          },
+          "name": "func.return",
+          "inputs": [
+            {
+              "name": "func.return_input_0",
+              "value": [
+                4
+              ]
+            }
+          ],
+          "outputs": [],
+          "attributes": []
+        }
+      ]
+    }
+  ]
+}
